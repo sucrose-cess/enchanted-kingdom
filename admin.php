@@ -3,7 +3,6 @@ require_once 'db.php';
 
 $message = "";
 
-
 function parseAttractionId($idInput) {
     if (is_string($idInput) && strpos($idInput, 'RD-') === 0) {
         return intval(substr($idInput, 3));
@@ -84,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             exit;
 
             skip_redirect:
-}
+        }
 
         // --- BOOKINGS CRUD PROCESSORS ---
         if ($_POST['action'] === 'update_booking') {
@@ -102,14 +101,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $stmt->execute([':id' => $id]);
             $message = "💥 Booking log wiped from history.";
         }
+
+        // --- CUSTOMERS (TRAVELERS) CRUD ---
+        if ($_POST['action'] === 'create_customer') {
+            $full = trim($_POST['full_name'] ?? $_POST['fullname'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? null;
+
+            if (empty($full) || empty($email)) {
+                $message = "⚠️ Missing name or email for new traveler.";
+            } else {
+                // generate a unique customer_ID
+                $customerId = 'C' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+                $pwHash = $password ? password_hash($password, PASSWORD_DEFAULT) : password_hash(bin2hex(random_bytes(6)), PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare('INSERT INTO customer_info (customer_ID, full_name, email, password_hash) VALUES (:id, :full_name, :email, :hash)');
+                $stmt->execute([':id' => $customerId, ':full_name' => $full, ':email' => $email, ':hash' => $pwHash]);
+                $message = "✅ Traveler added: {$full} (ID: {$customerId}).";
+            }
+        }
+
+        if ($_POST['action'] === 'update_customer') {
+            $cid = trim($_POST['customer_id'] ?? '');
+            $full = trim($_POST['full_name'] ?? $_POST['fullname'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? null;
+
+            if (empty($cid) || empty($full) || empty($email)) {
+                $message = "⚠️ Missing required fields for traveler update.";
+            } else {
+                $params = [':full_name' => $full, ':email' => $email, ':id' => $cid];
+                $sql = "UPDATE customer_info SET full_name = :full_name, email = :email";
+                if (!empty($password)) {
+                    $sql .= ", password_hash = :hash";
+                    $params[':hash'] = password_hash($password, PASSWORD_DEFAULT);
+                }
+                $sql .= " WHERE customer_ID = :id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+                $message = "✏️ Traveler {$cid} updated.";
+            }
+        }
+
+        if ($_POST['action'] === 'delete_customer') {
+            $cid = trim($_POST['customer_id'] ?? $_POST['id'] ?? '');
+            if (empty($cid)) {
+                $message = "⚠️ No traveler ID supplied for deletion.";
+            } else {
+                // Remove bookings first to keep referential integrity
+                $stmt = $pdo->prepare('DELETE FROM booking_details WHERE customer_ID = :cid');
+                $stmt->execute([':cid' => $cid]);
+                $stmt = $pdo->prepare('DELETE FROM customer_info WHERE customer_ID = :cid');
+                $stmt->execute([':cid' => $cid]);
+                $message = "🗑️ Traveler {$cid} and their bookings removed.";
+            }
+        }
     } catch (\PDOException $e) {
         $message = "⚠️ Magic Failure: " . $e->getMessage();
     }
 }
 
+// Fetch current data for rendering
 $attractions = $pdo->query("SELECT * FROM attractions ORDER BY attractions_ID ASC")->fetchAll();
 $customers = $pdo->query("SELECT * FROM customer_info ORDER BY full_name ASC")->fetchAll();
 $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS customer_email FROM booking_details b LEFT JOIN customer_info c ON b.customer_ID = c.customer_ID ORDER BY booking_date DESC")->fetchAll();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -213,6 +268,7 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
             <section id="customers" class="admin-section">
                 <div class="section-header">
                     <h2 class="glowing-text">Registered Travelers</h2>
+                    <button class="action-btn" id="summonAddCustomerModal" style="background: var(--eldar-green); color: white; margin-left:12px;">+ Add Traveler</button>
                 </div>
                 <div class="table-container glass-panel">
                     <table class="admin-table">
@@ -221,6 +277,7 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                                 <th>Customer ID</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -229,6 +286,14 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                                 <td><?php echo htmlspecialchars($c['customer_ID']); ?></td>
                                 <td><?php echo htmlspecialchars($c['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($c['email']); ?></td>
+                                <td>
+                                    <button class="action-btn edit-customer-trigger" data-customer-id="<?php echo htmlspecialchars($c['customer_ID']); ?>" data-full_name="<?php echo htmlspecialchars($c['full_name']); ?>" data-email="<?php echo htmlspecialchars($c['email']); ?>">Edit</button>
+                                    <form method="POST" style="display:inline; margin-left:8px;" onsubmit="return confirm('Delete traveler and their bookings?');">
+                                        <input type="hidden" name="action" value="delete_customer">
+                                        <input type="hidden" name="customer_id" value="<?php echo htmlspecialchars($c['customer_ID']); ?>">
+                                        <button type="submit" class="action-btn" style="background: rgba(244,67,54,0.2); color:#ff8a80;">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -309,6 +374,55 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                     </select>
                 </div>
                 <button type="submit" class="action-btn">Cast Spell</button>
+                <button type="button" onclick="closeModals()" class="action-btn" style="background:#555;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div id="addCustomerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+        <div class="glass-panel" style="padding:30px; width:420px; background: var(--eldar-purple-dark);">
+            <h3 class="glowing-text" style="margin-bottom:20px;">Add Traveler</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_customer">
+                <div style="margin-bottom:12px;">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" required style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Email</label>
+                    <input type="email" name="email" required style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Password (optional)</label>
+                    <input type="password" name="password" style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <button type="submit" class="action-btn">Add Traveler</button>
+                <button type="button" onclick="closeModals()" class="action-btn" style="background:#555;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div id="editCustomerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+        <div class="glass-panel" style="padding:30px; width:420px; background: var(--eldar-purple-dark);">
+            <h3 class="glowing-text" style="margin-bottom:20px;">Edit Traveler</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="update_customer">
+                <input type="hidden" name="customer_id" id="edit_customer_id">
+                <div style="margin-bottom:12px;">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" id="edit_customer_fullname" required style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>Email</label>
+                    <input type="email" name="email" id="edit_customer_email" required style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label>New Password (leave blank to keep current)</label>
+                    <input type="password" name="password" id="edit_customer_password" style="width:100%; padding:8px; margin-top:5px;">
+                </div>
+                <button type="submit" class="action-btn">Save Changes</button>
                 <button type="button" onclick="closeModals()" class="action-btn" style="background:#555;">Cancel</button>
             </form>
         </div>

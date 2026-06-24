@@ -42,11 +42,21 @@ navItems.forEach(item => {
 const addModal = document.getElementById('addModal');
 const editModal = document.getElementById('editModal');
 const summonAddModalBtn = document.getElementById('summonAddModal');
+const summonAddCustomerModalBtn = document.getElementById('summonAddCustomerModal');
+const addCustomerModal = document.getElementById('addCustomerModal');
+const editCustomerModal = document.getElementById('editCustomerModal');
 
 // Open Create Modal
 if(summonAddModalBtn) {
     summonAddModalBtn.addEventListener('click', () => {
         addModal.style.display = 'flex';
+    });
+}
+
+// Open Add Customer Modal
+if (summonAddCustomerModalBtn) {
+    summonAddCustomerModalBtn.addEventListener('click', () => {
+        if (addCustomerModal) addCustomerModal.style.display = 'flex';
     });
 }
 
@@ -136,5 +146,23 @@ document.querySelectorAll('.customer-row').forEach(row => {
             .then(r => r.text())
             .then(html => { container.innerHTML = html; })
             .catch(err => { container.innerHTML = '<div class="glass-panel" style="padding:20px;">Error loading bookings.</div>'; console.error(err); });
+    });
+});
+
+// Open Edit Customer modal
+document.querySelectorAll('.edit-customer-trigger').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const cid = this.getAttribute('data-customer-id');
+        const fullname = this.getAttribute('data-full_name');
+        const email = this.getAttribute('data-email');
+        const idEl = document.getElementById('edit_customer_id');
+        const nameEl = document.getElementById('edit_customer_fullname');
+        const emailEl = document.getElementById('edit_customer_email');
+        const passEl = document.getElementById('edit_customer_password');
+        if (idEl) idEl.value = cid;
+        if (nameEl) nameEl.value = fullname || '';
+        if (emailEl) emailEl.value = email || '';
+        if (passEl) passEl.value = '';
+        if (editCustomerModal) editCustomerModal.style.display = 'flex';
     });
 });
