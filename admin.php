@@ -3,21 +3,15 @@ require_once 'db.php';
 
 $message = "";
 
-// ==========================================
-// � ID PARSING UTILITY FOR RD-### FORMAT
-// ==========================================
+
 function parseAttractionId($idInput) {
-    // If it's RD-### format, extract the numeric part
     if (is_string($idInput) && strpos($idInput, 'RD-') === 0) {
         return intval(substr($idInput, 3));
     }
-    // Otherwise, return as numeric
     return intval($idInput);
 }
 
-// ==========================================
-// 🔮 BACKEND RECONSTRUCTION PROCESSORS (CRUD)
-// ==========================================
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     try {
         // --- ATTRACTIONS CRUD PROCESSORS ---
@@ -69,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $id = parseAttractionId(trim($_POST['id'] ?? ''));
             $name = trim($_POST['name'] ?? '');
 
-            // Try to delete by ID first, fall back to name if ID is invalid
             if ($id > 0) {
                 $stmt = $pdo->prepare("
                     DELETE FROM attractions
@@ -77,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 ");
                 $stmt->execute([':id' => $id]);
             } elseif (!empty($name)) {
-                // Fallback: delete by attraction name if ID is missing
                 $stmt = $pdo->prepare("
                     DELETE FROM attractions
                     WHERE attraction_name = :name
@@ -117,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Fetch live database content
 $attractions = $pdo->query("SELECT * FROM attractions ORDER BY attractions_ID ASC")->fetchAll();
 $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DESC")->fetchAll();
 ?>
