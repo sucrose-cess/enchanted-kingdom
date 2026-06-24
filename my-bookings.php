@@ -52,11 +52,11 @@
         <div class="logo">EK Magic</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="Index.html#home">Realm</a></li>
-                <li><a href="Index.html#attractions">Wonders</a></li>
-                <li><a href="Index.html#tickets">Summon Tickets</a></li>
-                <li><a href="my-bookings.html" style="color: var(--eldar-gold);">My Spellbook</a></li>
-                <li id="auth-nav-link"><a href="login.html">Sign In / Sign Up</a></li>
+                <li><a href="index.php#home">Realm</a></li>
+                <li><a href="index.php#attractions">Wonders</a></li>
+                <li><a href="index.php#tickets">Summon Tickets</a></li>
+                <li><a href="my-bookings.php" style="color: var(--eldar-gold);">My Spellbook</a></li>
+                <li id="auth-nav-link"><a href="login.php">Sign In / Sign Up</a></li>
             </ul>
         </nav>
     </header>
@@ -128,7 +128,7 @@
                 emptyTitle.innerText = 'Wandering Traveler Detected!';
                 emptyDesc.innerText = 'You must be signed in to view your Spellbook and manage your tickets.';
                 emptyBtn.innerText = 'Sign In to the Realm';
-                emptyBtn.onclick = () => window.location.href = 'login.html';
+                emptyBtn.onclick = () => window.location.href = 'login.php';
 
             } else if (!hasBookings) {
                 // If they are logged in, but haven't bought anything yet
@@ -136,7 +136,7 @@
                 emptyTitle.innerText = 'Your Spellbook is Empty!';
                 emptyDesc.innerText = 'You haven\\'t summoned any tickets for the Enchanted Kingdom yet.';
                 emptyBtn.innerText = 'Summon Tickets Now';
-                emptyBtn.onclick = () => window.location.href = 'Index.html#tickets';
+                emptyBtn.onclick = () => window.location.href = 'index.php#tickets';
 
             } else {
                 // If they are logged in AND have booked tickets
