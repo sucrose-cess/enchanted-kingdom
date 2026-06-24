@@ -33,14 +33,12 @@ navItems.forEach(item => {
             targetSection.classList.add('active-section');
         } else {
             alert("Logging out of the realm...");
-            window.location.href = "Index.php"; 
+            window.location.href = "index.php"; 
         }
     });
 });
 
-// ==========================================
-// 🧪 INTERACTIVE ALCHEMY MODAL LOGIC (CRUD)
-// ==========================================
+
 const addModal = document.getElementById('addModal');
 const editModal = document.getElementById('editModal');
 const summonAddModalBtn = document.getElementById('summonAddModal');
