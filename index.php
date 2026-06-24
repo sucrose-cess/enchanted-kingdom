@@ -40,64 +40,77 @@
         </section>
 
         <section id="attractions" class="attractions">
-            <h2 class="glowing-text">Featured Wonders</h2>
+            <h2 class="glowing-text">Featured Wonders of the Philippines</h2>
+            
             <div class="card-grid">
                 <a href="space-shuttle.html" class="card-link">
                     <div class="card">
-                        <div class="card-img slide-shuttle-1"></div>
-                        <div class="card-body">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/shuttle-thumb.png" alt="Space Shuttle">
+                        </div>
+                        <div class="card-content">
                             <h3>Space Shuttle</h3>
-                            <p>An exhilarating, looping roller coaster experience that propels riders forward and backward through a thrilling circuit.</p>
+                            <p>Defy gravity on the realm's most iconic 11-story looping coaster.</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="jungle-log-jam.html" class="card-link">
                     <div class="card">
-                        <div class="card-img slide-logjam-1"></div>
-                        <div class="card-body">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/log-jam-thumb.png" alt="Jungle Log Jam">
+                        </div>
+                        <div class="card-content">
                             <h3>Jungle Log Jam</h3>
-                            <p>A classic, refreshing water flume ride featuring exhilarating drops down a rushing jungle river path.</p>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="flying-fiesta.html" class="card-link">
-                    <div class="card">
-                        <div class="card-img slide-fiesta-1"></div>
-                        <div class="card-body">
-                            <h3>Flying Fiesta</h3>
-                            <p>A giant wave swinger attraction that lifts riders into the open sky, spinning them in a joyful, festive arc.</p>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="grand-carousel.html" class="card-link">
-                    <div class="card">
-                        <div class="card-img slide-carousel-1"></div>
-                        <div class="card-body">
-                            <h3>Grand Carousel</h3>
-                            <p>A majestic, beautifully detailed, traditional carousel that offers a nostalgic ride for dreamers of all ages.</p>
+                            <p>Take a thrilling plunge down a rushing water flume into the jungle.</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="rio-grande-rapids.html" class="card-link">
                     <div class="card">
-                        <div class="card-img slide-rio-1"></div>
-                        <div class="card-body">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/rapids-thumb.png" alt="Rio Grande Rapids">
+                        </div>
+                        <div class="card-content">
                             <h3>Rio Grande Rapids</h3>
-                            <p>A thrilling white-water rafting adventure that sends your party spinning down a turbulent, splash-filled river canyon.</p>
+                            <p>Brave the rushing waters and sudden drops of this wild, enchanting river.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="grand-carousel.html" class="card-link">
+                    <div class="card">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/carousel-thumb.png" alt="Grand Carousel">
+                        </div>
+                        <div class="card-content">
+                            <h3>Grand Carousel</h3>
+                            <p>Enjoy a classic, whimsical ride on beautifully crafted steeds.</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="anchors-away.html" class="card-link">
                     <div class="card">
-                        <div class="card-img slide-anchors-1"></div>
-                        <div class="card-body">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/anchors-thumb.png" alt="Anchors Away">
+                        </div>
+                        <div class="card-content">
                             <h3>Anchors Away</h3>
-                            <p>A massive, beautifully themed pirate galleon that swings back and forth to high peaks, capturing ocean-like drops.</p>
+                            <p>Sail the celestial seas on this giant swinging galleon.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="flying-fiesta.html" class="card-link">
+                    <div class="card">
+                        <div class="card-img-box">
+                            <img src="Images/Attractions/fiesta-thumb.png" alt="Flying Fiesta">
+                        </div>
+                        <div class="card-content">
+                            <h3>Flying Fiesta</h3>
+                            <p>Soar through the air on a magical, high-speed giant swing ride.</p>
                         </div>
                     </div>
                 </a>
