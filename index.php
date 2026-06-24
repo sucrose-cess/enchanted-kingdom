@@ -15,13 +15,12 @@
             <ul class="nav-links">
                 <li><a href="#home">Realm</a></li>
                 <li><a href="#attractions">Wonders</a></li>
-                <li><a href="#tickets">Summon Tickets</a></li>
+                <li><a href="#tickets">Enter Realm</a></li>
                 
                 <li><a href="my-bookings.php" style="color: var(--eldar-gold);">My Spellbook</a></li>
-                <li id="auth-nav-link"><a href="login.php">Sign In / Sign Up</a></li>
             </ul>
         </nav>
-        <button class="cta-btn" onclick="window.location.href='#tickets'">Enter Now</button>
+        <button class="cta-btn" onclick="window.location.href='login.php'">Enter Now</button>
     </header>
 
     <main>
@@ -42,7 +41,7 @@
             </div>
         </section>
 
-       <section id="attractions" class="attractions">
+        <section id="attractions" class="attractions">
             <h2 class="glowing-text">Featured Wonders of the Philippines</h2>
             
             <div class="card-grid">
@@ -123,70 +122,30 @@
         <section id="tickets" class="inquiry-section">
             <img src="Wizard.png" alt="Eldar the Wizard" class="wizard-side-img">
 
-            <div class="ticket-wrapper">
-                <h2 class="glowing-text">Summon Your Tickets</h2>
-                
-                <form id="bookingForm" class="inquiry-form glass-panel" action="book.php" method="POST">
-                    
-                    <div class="form-group">
-                        <label for="traveler_name">Traveler's Name</label>
-                        <input type="text" id="traveler_name" name="traveler_name" placeholder="Enter your full name">
-                        <small class="error-msg"></small>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="traveler_email">Celestial Owl Mail (Email)</label>
-                        <input type="email" id="traveler_email" name="traveler_email" placeholder="traveler@realm.com">
-                        <small class="error-msg"></small>
-                    </div>
+            <div class="ticket-wrapper" style="text-align:center;">
 
-                    <div class="form-group">
-                        <label for="ticket_type">Magic Pass Type</label>
-                        <select id="ticket_type" name="ticket_type">
-                            <option value="Regular Day Pass">Regular Day Pass (₱1,200)</option>
-                            <option value="Junior Pass">Junior Pass (₱800)</option>
-                            <option value="VIP Magic Pass">VIP Magic Pass (₱2,500)</option>
-                        </select>
-                    </div>
+                <h2 class="glowing-text">Enter the Realm</h2>
 
-                    <div class="form-group">
-                        <label for="visit_date">Date of Visit</label>
-                        <input type="date" id="visit_date" name="visit_date">
-                        <small class="error-msg"></small>
-                    </div>
+                <p style="margin-bottom: 25px;">
+                    Access your spellbook, bookings, and enchanted tickets.
+                </p>
 
-                    <div class="count-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 5px;">
-                        <div class="form-group">
-                            <label for="adult_count">Adults</label>
-                            <input type="number" id="adult_count" name="adult_count" min="0" value="1">
-                        </div>
-                        <div class="form-group">
-                            <label for="children_count">Children</label>
-                            <input type="number" id="children_count" name="children_count" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="senior_pwd_count">Senior / PWD</label>
-                            <input type="number" id="senior_pwd_count" name="senior_pwd_count" min="0" value="0">
-                        </div>
-                    </div>
-                    <small id="party-error-msg" class="error-msg" style="margin-bottom: 20px; margin-top: -10px;"></small>
+                <a href="login.php" class="glow-login-btn">
+                    LOG IN NOW!
+                </a>
 
-                    <div class="form-group">
-                        <label for="optional_services">Optional Add-on Services</label>
-                        <input type="text" id="optional_services" name="optional_services" placeholder="e.g., Shuttle Express, Photo Magic Pass">
-                    </div>
+                <p style="margin-top: 18px;">
+                    New to the realm?
+                    <a href="login.php" style="color: var(--eldar-gold); text-decoration: none;">
+                        Sign up here
+                    </a>
+                </p>
 
-                    <div class="form-group">
-                        <label for="special_request">Special Requests / Runes</label>
-                        <textarea id="special_request" name="special_request" rows="3" placeholder="Any spatial configurations or medical requests?"></textarea>
-                    </div>
-
-                    <input type="hidden" id="total_amount_php" name="total_amount_php" value="0">
-
-                    <button type="submit" class="submit-btn">Cast Booking Spell</button>
-                </form>
             </div>
+
         </section>
+
     </main>
 
     <footer>
