@@ -89,12 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         // --- BOOKINGS CRUD PROCESSORS ---
         if ($_POST['action'] === 'update_booking') {
             $id = trim($_POST['booking_id']);
-            $name = trim($_POST['traveler_name']);
-            $email = trim($_POST['traveler_email']);
             $status = trim($_POST['booking_status']);
-            
-            $stmt = $pdo->prepare("UPDATE booking_details SET traveler_name = :name, traveler_email = :email, booking_status = :status WHERE booking_ID = :id");
-            $stmt->execute([':name' => $name, ':email' => $email, ':status' => $status, ':id' => $id]);
+
+            $stmt = $pdo->prepare("UPDATE booking_details SET booking_status = :status WHERE booking_ID = :id");
+            $stmt->execute([':status' => $status, ':id' => $id]);
             $message = "📜 Booking spell status updated successfully.";
         }
         
@@ -110,7 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 $attractions = $pdo->query("SELECT * FROM attractions ORDER BY attractions_ID ASC")->fetchAll();
-$bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DESC")->fetchAll();
+$customers = $pdo->query("SELECT * FROM customer_info ORDER BY full_name ASC")->fetchAll();
+$bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS customer_email FROM booking_details b LEFT JOIN customer_info c ON b.customer_ID = c.customer_ID ORDER BY booking_date DESC")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -131,6 +130,7 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
             </div>
             <ul class="sidebar-nav">
                 <li class="active" data-target="dashboard">🌌 Realm Overview</li>
+                <li data-target="customers">🧙‍♂️ Travelers</li>
                 <li data-target="bookings">📜 Spell Bookings</li>
                 <li data-target="attractions">🎡 Attractions</li>
                 <li>🚪 Logout</li>
@@ -171,8 +171,10 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
                         <thead>
                             <tr>
                                 <th>Booking ID</th>
-                                <th>Traveler Name</th>
-                                <th>Email Address</th>
+                                <th>Traveler</th>
+                                <th>Email</th>
+                                <th>Visit Date</th>
+                                <th>Ticket</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -181,8 +183,10 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
                             <?php foreach ($bookings as $b): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($b['booking_ID']); ?></td>
-                                <td><?php echo htmlspecialchars($b['traveler_name']); ?></td>
-                                <td><?php echo htmlspecialchars($b['traveler_email']); ?></td>
+                                <td><?php echo htmlspecialchars($b['customer_name'] ?? 'Unknown'); ?></td>
+                                <td><?php echo htmlspecialchars($b['customer_email'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($b['visit_date']); ?></td>
+                                <td><?php echo htmlspecialchars($b['ticket_type']); ?></td>
                                 <td>
                                     <span class="status-badge <?php echo strtolower($b['booking_status']); ?>">
                                         <?php echo htmlspecialchars($b['booking_status']); ?>
@@ -191,8 +195,6 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
                                 <td>
                                     <button class="action-btn edit-btn edit-booking-trigger" 
                                             data-id="<?php echo $b['booking_ID']; ?>"
-                                            data-name="<?php echo htmlspecialchars($b['traveler_name']); ?>"
-                                            data-email="<?php echo htmlspecialchars($b['traveler_email']); ?>"
                                             data-status="<?php echo htmlspecialchars($b['booking_status']); ?>">Modify</button>
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Banish this booking record?');">
                                         <input type="hidden" name="action" value="delete_booking">
@@ -200,6 +202,32 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
                                         <button type="submit" class="action-btn banish-trigger" data-id="<?php echo $b['booking_ID']; ?>" style="background: rgba(244,67,54,0.2); color:#ff8a80;">Banish</button>
                                     </form>
                                 </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="customers" class="admin-section">
+                <div class="section-header">
+                    <h2 class="glowing-text">Registered Travelers</h2>
+                </div>
+                <div class="table-container glass-panel">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($customers as $c): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($c['customer_ID']); ?></td>
+                                <td><?php echo htmlspecialchars($c['full_name']); ?></td>
+                                <td><?php echo htmlspecialchars($c['email']); ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -320,21 +348,7 @@ $bookings = $pdo->query("SELECT * FROM booking_details ORDER BY booking_date DES
                 <input type="hidden" name="action" value="update_booking">
                 <input type="hidden" name="booking_id" id="edit_booking_id">
                 <div style="margin-bottom:15px;">
-                    <label>Traveler Name</label>
-                    <input type="text" name="traveler_name" id="edit_booking_name" required style="width:100%; padding:8px; margin-top:5px;">
-                </div>
-                <div style="margin-bottom:15px;">
-                    <label>Email Address</label>
-                    <input type="email" name="traveler_email" id="edit_booking_email" required style="width:100%; padding:8px; margin-top:5px;">
-                </div>
-                <div style="margin-bottom:15px;">
-                    <label>Status</label>
-                    <select name="booking_status" id="edit_booking_status" style="width:100%; padding:8px; margin-top:5px; background:#000; color:#fff;">
-                        <option value="Pending">Pending</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                </div>
+
                 <button type="submit" class="action-btn">Update Log</button>
                 <button type="button" onclick="closeModals()" class="action-btn" style="background:#555;">Cancel</button>
             </form>

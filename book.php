@@ -1,67 +1,106 @@
 <?php
+session_start();
 require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $traveler_name = isset($_POST['name']) ? trim($_POST['name']) : '';
-    $traveler_email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $full_name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $ticket_type = trim($_POST['ticket_type'] ?? 'General Admission');
+    $visit_date = trim($_POST['visit_date'] ?? date('Y-m-d'));
+    $adult_count = intval($_POST['adult_count'] ?? 1);
+    $children_count = intval($_POST['children_count'] ?? 0);
+    $senior_pwd_count = intval($_POST['senior_pwd_count'] ?? 0);
+    $optional_services = trim($_POST['optional_services'] ?? 'None');
+    $special_request = trim($_POST['special_request'] ?? 'None');
+    $total_amount_php = floatval($_POST['total_amount_php'] ?? 0);
 
-    if (empty($traveler_name) || empty($traveler_email)) {
-        die("The magical energies are unstable. Please fill out all fields.");
+    if (empty($full_name) || empty($email)) {
+        die('Please provide both your full name and email to book tickets.');
     }
 
     try {
-        // Automatically generate a unique Booking ID text string matching your BXXX format
-        $generated_id = "B" . mt_rand(100, 999); 
-        
-        // Generates a random alphanumeric code for tracking reference strings
-        $generated_ref = "EK" . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+        if (!empty($_SESSION['role']) && $_SESSION['role'] === 'user' && !empty($_SESSION['user_id'])) {
+            $customerId = $_SESSION['user_id'];
+        } else {
+            $stmt = $pdo->prepare('SELECT customer_ID FROM customer_info WHERE email = :email LIMIT 1');
+            $stmt->execute([':email' => $email]);
+            $customer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "INSERT INTO booking_details (
+            if ($customer && !empty($customer['customer_ID'])) {
+                $customerId = $customer['customer_ID'];
+            } else {
+                $customerId = 'C' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+                $randomPassword = bin2hex(random_bytes(6));
+                $passwordHash = password_hash($randomPassword, PASSWORD_DEFAULT);
+                $insertCustomer = $pdo->prepare('INSERT INTO customer_info (customer_ID, full_name, email, password_hash) VALUES (:id, :full_name, :email, :hash)');
+                $insertCustomer->execute([
+                    ':id' => $customerId,
+                    ':full_name' => $full_name,
+                    ':email' => $email,
+                    ':hash' => $passwordHash,
+                ]);
+            }
+        }
+
+        $bookingId = 'B' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+        $referenceNumber = 'EK' . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+
+        $sql = 'INSERT INTO booking_details (
                     booking_ID,
-                    reference_number, 
-                    traveler_name,
-                    traveler_email,
-                    special_request, 
-                    booking_status, 
-                    booking_date, 
-                    visit_date,
+                    customer_ID,
                     ticket_type,
+                    visit_date,
+                    adult_count,
                     children_count,
                     senior_pwd_count,
-                    optional_services
+                    optional_services,
+                    reference_number,
+                    total_amount_php,
+                    special_request,
+                    booking_status,
+                    booking_date
                 ) VALUES (
                     :booking_id,
-                    :ref, 
-                    :name,
-                    :email,
-                    'None', 
-                    'Pending', 
-                    NOW(), 
-                    CURDATE(),
-                    'General Admission',
-                    '0',
-                    '0',
-                    'None'
-                )";
-                
+                    :customer_id,
+                    :ticket_type,
+                    :visit_date,
+                    :adult_count,
+                    :children_count,
+                    :senior_pwd_count,
+                    :optional_services,
+                    :reference_number,
+                    :total_amount_php,
+                    :special_request,
+                    :booking_status,
+                    NOW()
+                )';
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':booking_id' => $generated_id,
-            ':ref'        => $generated_ref,
-            ':name'       => $traveler_name,
-            ':email'      => $traveler_email
+            ':booking_id' => $bookingId,
+            ':customer_id' => $customerId,
+            ':ticket_type' => $ticket_type,
+            ':visit_date' => $visit_date,
+            ':adult_count' => $adult_count,
+            ':children_count' => $children_count,
+            ':senior_pwd_count' => $senior_pwd_count,
+            ':optional_services' => $optional_services,
+            ':reference_number' => $referenceNumber,
+            ':total_amount_php' => $total_amount_php,
+            ':special_request' => $special_request,
+            ':booking_status' => 'Pending',
         ]);
 
         echo "<script>
-                alert('✨ Your inquiry spell has been recorded in the database parchment! Reference: " . $generated_ref . "');
+                alert('✨ Booking recorded! Reference: {$referenceNumber}');
                 window.location.href = 'index.php';
               </script>";
-              
-    } catch (\PDOException $e) {
-        die("Database spell failed: " . $e->getMessage());
+        exit();
+    } catch (PDOException $e) {
+        die('Database Error: ' . $e->getMessage());
     }
-} else {
-    header("Location: index.php");
-    exit;
 }
+
+header('Location: index.php');
+exit();
 ?>

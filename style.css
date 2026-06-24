@@ -24,12 +24,8 @@ body {
     cursor: url('Wand.png'), auto; 
 }
 
-a, button, input[type="submit"], .primary-btn {
+a, button, input[type="submit"], .primary-btn, select, input, textarea {
     cursor: url('Wand.png'), pointer !important;
-}
-
-input[type="text"], input[type="email"] {
-    cursor: url('Wand.png'), text !important;
 }
 
 /* Starry Overlay */
@@ -179,7 +175,6 @@ button, .primary-btn {
     background-repeat: no-repeat;
 }
 
-/* Homepage Background Image Channels (.png) */
 .slide-1, .slide-1-dup { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow1.png'); }
 .slide-2 { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow2.png'); }
 .slide-3 { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow3.png'); }
@@ -207,46 +202,37 @@ button, .primary-btn {
     animation: seamlessSlideRight 16s infinite ease-in-out;
 }
 
-/* Attraction Header Background Image Channels */
-/* Space Shuttle */
 .slide-shuttle-1, .slide-shuttle-1-dup { background-image: url('Images/Attractions/shuttle-gallery1.png'); }
 .slide-shuttle-2 { background-image: url('Images/Attractions/shuttle-gallery2.png'); }
 .slide-shuttle-3 { background-image: url('Images/Attractions/shuttle-gallery3.png'); }
 
-/* Jungle Log Jam */
 .slide-logjam-1, .slide-logjam-1-dup { background-image: url('Images/Attractions/logjam-gallery1.png'); }
 .slide-logjam-2 { background-image: url('Images/Attractions/logjam-gallery2.png'); }
 .slide-logjam-3 { background-image: url('Images/Attractions/logjam-gallery3.png'); }
 
-/* Rio Grande Rapids */
 .slide-rio-1, .slide-rio-1-dup { background-image: url('Images/Attractions/rio-gallery1.png'); }
 .slide-rio-2 { background-image: url('Images/Attractions/rio-gallery2.png'); }
 .slide-rio-3 { background-image: url('Images/Attractions/rio-gallery3.png'); }
 
-/* Grand Carousel */
 .slide-carousel-1, .slide-carousel-1-dup { background-image: url('Images/Attractions/carousel-gallery1.png'); }
 .slide-carousel-2 { background-image: url('Images/Attractions/carousel-gallery2.png'); }
 .slide-carousel-3 { background-image: url('Images/Attractions/carousel-gallery3.png'); }
 
-/* Anchors Away */
 .slide-anchors-1, .slide-anchors-1-dup { background-image: url('Images/Attractions/anchors-gallery1.png'); }
 .slide-anchors-2 { background-image: url('Images/Attractions/anchors-gallery2.png'); }
 .slide-anchors-3 { background-image: url('Images/Attractions/anchors-gallery3.png'); }
 
-/* Flying Fiesta */
 .slide-fiesta-1, .slide-fiesta-1-dup { background-image: url('Images/Attractions/fiesta-gallery1.png'); }
 .slide-fiesta-2 { background-image: url('Images/Attractions/fiesta-gallery2.png'); }
 .slide-fiesta-3 { background-image: url('Images/Attractions/fiesta-gallery3.png'); }
 
-/* Universal Continuous Animation Routine */
 @keyframes seamlessSlideRight {
-    0%, 25%   { transform: translateX(0vw); }       /* Hold Slide 1 */
-    33%, 58%  { transform: translateX(-100vw); }    /* Hold Slide 2 */
-    66%, 91%  { transform: translateX(-200vw); }    /* Hold Slide 3 */
-    100%      { transform: translateX(-300vw); }    /* Slide to Duplicate and instantly snap to 0 */
+    0%, 25%   { transform: translateX(0vw); }       
+    33%, 58%  { transform: translateX(-100vw); }    
+    66%, 91%  { transform: translateX(-200vw); }    
+    100%      { transform: translateX(-300vw); }    
 }
 
-/* Protecting Gradients */
 .hero-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -261,7 +247,6 @@ button, .primary-btn {
     z-index: -1;
 }
 
-/* Typography & Display Layouts */
 .hero h1 {
     font-size: 4.5rem;
     color: var(--eldar-gold);
@@ -325,7 +310,6 @@ button, .primary-btn {
     box-shadow: var(--eldar-gold-glow); 
 }
 
-/* Image Box inside the Card */
 .card-img-box {
     width: 100%;
     height: 180px; 
@@ -339,7 +323,6 @@ button, .primary-btn {
     transition: transform 0.6s ease;
 }
 
-/* Zoom effect when hovering over the card */
 .card:hover .card-img-box img {
     transform: scale(1.1);
 }
@@ -475,7 +458,7 @@ button, .primary-btn {
 
 .gallery-item:hover img { transform: scale(1.05); }
 
-/* Inquiry Panel Area */
+/* Inquiry Panel Area & New Form Control Overrides */
 .inquiry-section {
     padding: 100px 50px;
     text-align: center;
@@ -488,7 +471,8 @@ button, .primary-btn {
 
 .wizard-side-img {
     position: absolute;
-    left: 0; bottom: 0;
+    left: -100px; 
+    bottom: 0;
     height: 90%; max-height: 500px;
     width: auto;
     object-fit: contain;
@@ -519,16 +503,26 @@ button, .primary-btn {
     font-weight: bold; letter-spacing: 1px;
 }
 
-.form-group input {
+.form-group input, .form-group select, .form-group textarea {
     width: 100%; padding: 12px 15px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     color: #fff; font-size: 1rem;
     transition: border 0.3s ease, box-shadow 0.3s ease;
+    font-family: inherit;
 }
 
-.form-group input:focus {
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group select option {
+    background-color: var(--eldar-purple-dark);
+    color: #fff;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     outline: none;
     border: 1px solid var(--eldar-gold);
     box-shadow: 0 0 10px rgba(255, 213, 79, 0.3);
@@ -553,60 +547,31 @@ footer {
 }
 
 @media (max-width: 900px) {
-    .wizard-side-img { height: 60%; opacity: 0.3; }
+    .wizard-side-img { height: 60%; opacity: 0.3; left: -20px; }
     .attraction-content { flex-direction: column; padding: 50px 20px; gap: 40px; }
     .attraction-hero h1 { font-size: 3.5rem; }
-    .hero h1 { font-size: 3.8rem; }
 }
 
 @media (max-width: 768px) {
     .navbar { flex-direction: column; padding: 15px; }
-    .nav-links { margin: 20px 0; gap: 15px; flex-wrap: wrap; justify-content: center; }
+    .nav-links { margin: 20px 0; gap: 15px; flex-wrap: wrap; justify-content: center;}
     .hero h1 { font-size: 3rem; }
-    .glowing-text { font-size: 2rem; }
     .attractions, .inquiry-section { padding: 60px 20px; }
-    .card-grid { grid-template-columns: 1fr; gap: 30px; }
-    .card { border-radius: 18px; }
-    .card-img-box { height: 220px; }
-    .card-content { padding: 25px; }
-    .card-content h3 { font-size: 1.35rem; }
-    .card-content p { font-size: 0.98rem; }
+    .card-grid { grid-template-columns: 1fr; }
     .attraction-gallery-grid { grid-template-columns: 1fr; }
     .attraction-gallery-section { padding: 0 20px; }
-    .attraction-content { gap: 30px; }
-    .quick-facts { min-width: auto; }
-    .wizard-side-img { display: none; }
-    .ticket-wrapper { max-width: 100%; }
-    .glass-panel { padding: 30px; }
-    .submit-btn { font-size: 1rem; padding: 14px; }
-}
-
-@media (max-width: 576px) {
-    .navbar { padding: 12px; }
-    .nav-links { gap: 10px; }
-    .hero { padding: 0 10px; }
-    .hero-slideshow { width: 100vw; }
-    .hero h1 { font-size: 2.4rem; }
-    .glowing-text { font-size: 1.75rem; margin-bottom: 30px; }
-    .attractions, .inquiry-section { padding: 40px 15px; }
-    .card-img-box { height: 200px; }
-    .card-content { padding: 22px; }
-    .form-group input { font-size: 0.95rem; }
-    .primary-btn, .submit-btn, .cta-btn { width: 100%; }
-    .quick-facts ul { padding-left: 0; }
-    .quick-facts li { font-size: 1rem; }
 }
 
 /* =========================================
-   MAGIC GLITTER TRAIL EFFECT (NEW)
+   MAGIC GLITTER TRAIL EFFECT
    ========================================= */
 .magic-glitter {
     position: fixed;
     background-color: var(--eldar-gold);
     box-shadow: var(--eldar-gold-glow);
     border-radius: 50%;
-    pointer-events: none; /* Ensures the sparkles don't block you from clicking links! */
-    z-index: 9999; /* Keeps sparkles on top of everything */
+    pointer-events: none;
+    z-index: 9999;
     transform: translate(-50%, -50%);
     animation: sparkleFall 0.8s forwards ease-out;
 }
@@ -614,4 +579,38 @@ footer {
 @keyframes sparkleFall {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     100% { transform: translate(-50%, 40px) scale(0); opacity: 0; }
+}
+
+/* =========================================
+   MY SPELLBOOK (BOOKINGS) ACTION BUTTONS
+   ========================================= */
+.action-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-light);
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn {
+    background-color: var(--eldar-green);
+    border: 1px solid #81c784;
+}
+
+.confirm-btn:hover {
+    background-color: #2e7d32;
+    box-shadow: 0 0 10px rgba(129, 199, 132, 0.5);
+}
+
+.cancel-btn {
+    background-color: #b71c1c; 
+    border: 1px solid #ef5350;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 0 10px rgba(239, 83, 80, 0.5);
 }
