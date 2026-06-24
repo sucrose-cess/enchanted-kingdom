@@ -1,0 +1,108 @@
+/* Core Magical Variables */
+:root {
+    --eldar-purple: #311b92;
+    --eldar-purple-dark: #1a0b54;
+    --eldar-gold: #ffd54f;
+    --eldar-gold-glow: 0 0 15px rgba(255, 213, 79, 0.8);
+    --eldar-green: #1b5e20;
+    --text-light: #eaeaea;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background: radial-gradient(circle at top left, var(--eldar-purple), var(--eldar-purple-dark));
+    color: var(--text-light);
+    min-height: 100vh;
+}
+
+/* Background Overlay */
+.stars-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+    opacity: 0.2; z-index: -1; animation: drift 100s linear infinite;
+}
+
+@keyframes drift { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+
+/* Reusable Glass Panel */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 213, 79, 0.2);
+    border-radius: 15px;
+}
+
+/* Layout */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    padding: 30px 20px;
+    border-right: 1px solid rgba(255, 213, 79, 0.3);
+    border-radius: 0 15px 15px 0;
+}
+
+.sidebar-header { margin-bottom: 40px; text-align: center; }
+.logo { color: var(--eldar-gold); text-shadow: var(--eldar-gold-glow); font-size: 1.8rem; }
+.admin-role { color: #aaa; font-size: 0.9rem; margin-top: 5px; }
+
+.sidebar-nav { list-style: none; }
+.sidebar-nav li {
+    padding: 15px; margin-bottom: 10px; border-radius: 10px;
+    cursor: pointer; transition: all 0.3s ease; color: #ccc;
+}
+.sidebar-nav li:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.sidebar-nav li.active {
+    background: rgba(255, 213, 79, 0.2);
+    color: var(--eldar-gold);
+    border-left: 4px solid var(--eldar-gold);
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1; padding: 30px; overflow-y: auto;
+}
+
+.admin-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 30px; margin-bottom: 30px;
+}
+
+/* Dashboard Stats */
+.stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;
+}
+.stat-card { padding: 30px; text-align: center; transition: transform 0.3s ease; }
+.stat-card:hover { transform: translateY(-5px); border-color: var(--eldar-gold); box-shadow: var(--eldar-gold-glow); }
+.stat-card h3 { font-size: 1.1rem; color: #ccc; margin-bottom: 15px; }
+.stat-number { font-size: 3rem; color: var(--eldar-gold); font-weight: bold; }
+
+/* Sections */
+.admin-section { display: none; animation: fadeIn 0.4s ease; }
+.admin-section.active-section { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.glowing-text { color: var(--eldar-gold); text-shadow: var(--eldar-gold-glow); }
+
+/* Data Tables */
+.table-container { padding: 20px; overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+.admin-table th, .admin-table td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.admin-table th { color: var(--eldar-gold); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+.admin-table tr:hover td { background: rgba(255, 255, 255, 0.05); }
+
+/* Badges & Buttons */
+.status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.status-badge.open { background: rgba(27, 94, 32, 0.3); color: #81c784; border: 1px solid #81c784; }
+.status-badge.maintenance { background: rgba(230, 81, 0, 0.3); color: #ffb74d; border: 1px solid #ffb74d; }
+
+.action-btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+.action-btn.add-btn { background: var(--eldar-green); color: var(--eldar-gold); box-shadow: 0 4px 10px rgba(27,94,32,0.5); }
+.action-btn.edit-btn { background: rgba(255, 213, 79, 0.2); color: var(--eldar-gold); border: 1px solid var(--eldar-gold); }
+.action-btn:hover { transform: scale(1.05); }

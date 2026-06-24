@@ -1,0 +1,588 @@
+/* Magical Variables */
+:root {
+    --eldar-purple: #311b92;
+    --eldar-purple-dark: #1a0b54;
+    --eldar-gold: #ffd54f;
+    --eldar-gold-glow: 0 0 15px rgba(255, 213, 79, 0.8);
+    --eldar-green: #1b5e20;
+    --text-light: #eaeaea;
+}
+
+/* General Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Updated PNG Wand Cursor */
+body {
+    background: radial-gradient(circle at top, var(--eldar-purple), var(--eldar-purple-dark));
+    color: var(--text-light);
+    overflow-x: hidden;
+    cursor: url('Wand.png'), auto; 
+}
+
+a, button, input[type="submit"], .primary-btn {
+    cursor: url('Wand.png'), pointer !important;
+}
+
+input[type="text"], input[type="email"] {
+    cursor: url('Wand.png'), text !important;
+}
+
+/* Starry Overlay */
+.stars-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+    opacity: 0.3;
+    z-index: -1;
+    animation: drift 100s linear infinite;
+}
+
+@keyframes drift {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 1000px; }
+}
+
+/* Standard Floating Animation */
+.floating {
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Navbar Elements */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: rgba(26, 11, 84, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 213, 79, 0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background-color: rgba(26, 11, 84, 0.95);
+    box-shadow: var(--eldar-gold-glow);
+    border-bottom: 1px solid var(--eldar-gold);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--eldar-gold);
+    text-shadow: var(--eldar-gold-glow);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--eldar-gold);
+    text-shadow: var(--eldar-gold-glow);
+}
+
+/* Action Buttons */
+button, .primary-btn {
+    border: 2px solid var(--eldar-gold);
+    border-radius: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.cta-btn {
+    padding: 10px 25px;
+    background-color: transparent;
+    color: var(--eldar-gold);
+}
+
+.cta-btn:hover {
+    background-color: var(--eldar-gold);
+    color: var(--eldar-purple-dark);
+    box-shadow: var(--eldar-gold-glow);
+}
+
+.primary-btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 40px;
+    background-color: var(--eldar-green);
+    color: var(--eldar-gold);
+    text-decoration: none;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(27, 94, 32, 0.6);
+}
+
+.primary-btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--eldar-gold-glow);
+    background-color: #2e7d32;
+}
+
+/* =========================================
+   SEAMLESS LOOP SLIDESHOW LAYOUTS
+   ========================================= */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.hero-slideshow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 400vw; 
+    height: 100%;
+    display: flex;
+    z-index: -2; 
+    animation: seamlessSlideRight 16s infinite ease-in-out; 
+}
+
+.slide {
+    width: 100vw;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Homepage Background Image Channels (.png) */
+.slide-1, .slide-1-dup { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow1.png'); }
+.slide-2 { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow2.png'); }
+.slide-3 { background-image: url('Images/Homepage_Images/EnchantedKingdomSlideshow3.png'); }
+
+/* Attraction Page Slideshow Structure */
+.attraction-hero {
+    height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 70px;
+    border-bottom: 2px solid var(--eldar-gold);
+    overflow: hidden;
+    z-index: 1; 
+}
+
+.attraction-slideshow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 400vw;
+    height: 100%;
+    display: flex;
+    z-index: -2; 
+    animation: seamlessSlideRight 16s infinite ease-in-out;
+}
+
+/* Attraction Header Background Image Channels */
+/* Space Shuttle */
+.slide-shuttle-1, .slide-shuttle-1-dup { background-image: url('Images/Attractions/shuttle-gallery1.png'); }
+.slide-shuttle-2 { background-image: url('Images/Attractions/shuttle-gallery2.png'); }
+.slide-shuttle-3 { background-image: url('Images/Attractions/shuttle-gallery3.png'); }
+
+/* Jungle Log Jam */
+.slide-logjam-1, .slide-logjam-1-dup { background-image: url('Images/Attractions/logjam-gallery1.png'); }
+.slide-logjam-2 { background-image: url('Images/Attractions/logjam-gallery2.png'); }
+.slide-logjam-3 { background-image: url('Images/Attractions/logjam-gallery3.png'); }
+
+/* Rio Grande Rapids */
+.slide-rio-1, .slide-rio-1-dup { background-image: url('Images/Attractions/rio-gallery1.png'); }
+.slide-rio-2 { background-image: url('Images/Attractions/rio-gallery2.png'); }
+.slide-rio-3 { background-image: url('Images/Attractions/rio-gallery3.png'); }
+
+/* Grand Carousel */
+.slide-carousel-1, .slide-carousel-1-dup { background-image: url('Images/Attractions/carousel-gallery1.png'); }
+.slide-carousel-2 { background-image: url('Images/Attractions/carousel-gallery2.png'); }
+.slide-carousel-3 { background-image: url('Images/Attractions/carousel-gallery3.png'); }
+
+/* Anchors Away */
+.slide-anchors-1, .slide-anchors-1-dup { background-image: url('Images/Attractions/anchors-gallery1.png'); }
+.slide-anchors-2 { background-image: url('Images/Attractions/anchors-gallery2.png'); }
+.slide-anchors-3 { background-image: url('Images/Attractions/anchors-gallery3.png'); }
+
+/* Flying Fiesta */
+.slide-fiesta-1, .slide-fiesta-1-dup { background-image: url('Images/Attractions/fiesta-gallery1.png'); }
+.slide-fiesta-2 { background-image: url('Images/Attractions/fiesta-gallery2.png'); }
+.slide-fiesta-3 { background-image: url('Images/Attractions/fiesta-gallery3.png'); }
+
+/* Universal Continuous Animation Routine */
+@keyframes seamlessSlideRight {
+    0%, 25%   { transform: translateX(0vw); }       /* Hold Slide 1 */
+    33%, 58%  { transform: translateX(-100vw); }    /* Hold Slide 2 */
+    66%, 91%  { transform: translateX(-200vw); }    /* Hold Slide 3 */
+    100%      { transform: translateX(-300vw); }    /* Slide to Duplicate and instantly snap to 0 */
+}
+
+/* Protecting Gradients */
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(49,27,146,0.4) 0%, rgba(26,11,84,0.85) 100%);
+    z-index: -1;
+}
+
+.attraction-hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(26,11,84,0.3) 0%, rgba(26,11,84,0.9) 100%);
+    z-index: -1;
+}
+
+/* Typography & Display Layouts */
+.hero h1 {
+    font-size: 4.5rem;
+    color: var(--eldar-gold);
+    text-shadow: var(--eldar-gold-glow);
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+    position: relative;
+    z-index: 10;
+}
+
+.attraction-hero h1 {
+    position: relative;
+    z-index: 10;
+    font-size: 5rem;
+    color: var(--eldar-gold);
+    text-shadow: var(--eldar-gold-glow);
+    font-family: 'Georgia', serif;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.glowing-text {
+    color: var(--eldar-gold);
+    text-shadow: var(--eldar-gold-glow);
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    font-family: 'Georgia', serif;
+}
+
+/* ==========================================================================
+   HOME PAGE CARD GRID
+   ========================================================================== */
+.attractions { padding: 100px 50px; text-align: center; }
+
+.card-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 40px; 
+    margin-top: 40px;
+}
+
+.card-link { text-decoration: none; color: inherit; display: block; }
+
+.card {
+    background: rgba(255, 255, 255, 0.05); 
+    backdrop-filter: blur(15px); 
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 213, 79, 0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    transition: transform 0.4s ease, border 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card:hover { 
+    transform: translateY(-15px); 
+    border: 1px solid var(--eldar-gold); 
+    box-shadow: var(--eldar-gold-glow); 
+}
+
+/* Image Box inside the Card */
+.card-img-box {
+    width: 100%;
+    height: 180px; 
+    overflow: hidden;
+}
+
+.card-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+/* Zoom effect when hovering over the card */
+.card:hover .card-img-box img {
+    transform: scale(1.1);
+}
+
+.card-content {
+    padding: 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-content h3 { 
+    color: var(--eldar-gold); 
+    margin-bottom: 12px; 
+    font-size: 1.5rem; 
+}
+
+.card-content p {
+    color: #ddd;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* =========================================
+   TWO-COLUMN ATTRACT DETAILS CONTENT
+   ========================================= */
+.attraction-content {
+    padding: 80px 50px;
+    display: flex;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+.attraction-desc { flex: 2; }
+
+.attraction-desc h2 {
+    color: var(--eldar-gold);
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    font-family: 'Georgia', serif;
+    text-shadow: 0 0 10px rgba(255, 213, 79, 0.3);
+}
+
+.attraction-desc p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.inline-ride-img {
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid rgba(255, 213, 79, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.quick-facts {
+    flex: 1;
+    min-width: 300px;
+    padding: 35px;
+}
+
+.quick-facts h3 {
+    color: var(--eldar-gold);
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--eldar-gold);
+    padding-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quick-facts ul { list-style: none; }
+.quick-facts li { margin-bottom: 20px; font-size: 1.05rem; line-height: 1.4; }
+
+.quick-facts strong {
+    color: var(--eldar-gold);
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+.attraction-gallery-section {
+    max-width: 1200px;
+    margin: 0 auto 80px auto;
+    padding: 0 50px;
+}
+
+.attraction-gallery-section h3 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-family: 'Georgia', serif;
+    text-align: center;
+}
+
+.attraction-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--eldar-gold);
+}
+
+.gallery-item:hover img { transform: scale(1.05); }
+
+/* Inquiry Panel Area */
+.inquiry-section {
+    padding: 100px 50px;
+    text-align: center;
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wizard-side-img {
+    position: absolute;
+    left: 0; bottom: 0;
+    height: 90%; max-height: 500px;
+    width: auto;
+    object-fit: contain;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ticket-wrapper {
+    position: relative;
+    z-index: 20;
+    width: 100%; max-width: 600px;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 213, 79, 0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.form-group { margin-bottom: 25px; text-align: left; }
+
+.form-group label {
+    display: block; margin-bottom: 10px;
+    color: var(--eldar-gold);
+    font-weight: bold; letter-spacing: 1px;
+}
+
+.form-group input {
+    width: 100%; padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff; font-size: 1rem;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border: 1px solid var(--eldar-gold);
+    box-shadow: 0 0 10px rgba(255, 213, 79, 0.3);
+}
+
+.error-msg { color: #ff5252; font-size: 0.85rem; display: none; margin-top: 5px; }
+.submit-btn { width: 100%; padding: 15px; background-color: var(--eldar-purple); color: var(--eldar-gold); font-size: 1.2rem; }
+.submit-btn:hover { background-color: var(--eldar-gold); color: var(--eldar-purple-dark); box-shadow: var(--eldar-gold-glow); }
+
+footer {
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center; padding: 30px;
+    border-top: 1px solid rgba(255, 213, 79, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* =========================================
+   RESPONSIVE LAYOUT BREAKPOINTS
+   ========================================= */
+@media (max-width: 992px) {
+    .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+    .wizard-side-img { height: 60%; opacity: 0.3; }
+    .attraction-content { flex-direction: column; padding: 50px 20px; gap: 40px; }
+    .attraction-hero h1 { font-size: 3.5rem; }
+}
+
+@media (max-width: 768px) {
+    .navbar { flex-direction: column; padding: 15px; }
+    .nav-links { margin: 20px 0; gap: 15px; flex-wrap: wrap; justify-content: center;}
+    .hero h1 { font-size: 3rem; }
+    .attractions, .inquiry-section { padding: 60px 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .attraction-gallery-grid { grid-template-columns: 1fr; }
+    .attraction-gallery-section { padding: 0 20px; }
+}
+
+/* =========================================
+   MAGIC GLITTER TRAIL EFFECT (NEW)
+   ========================================= */
+.magic-glitter {
+    position: fixed;
+    background-color: var(--eldar-gold);
+    box-shadow: var(--eldar-gold-glow);
+    border-radius: 50%;
+    pointer-events: none; /* Ensures the sparkles don't block you from clicking links! */
+    z-index: 9999; /* Keeps sparkles on top of everything */
+    transform: translate(-50%, -50%);
+    animation: sparkleFall 0.8s forwards ease-out;
+}
+
+@keyframes sparkleFall {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, 40px) scale(0); opacity: 0; }
+}
