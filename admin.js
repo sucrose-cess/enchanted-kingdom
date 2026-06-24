@@ -123,3 +123,18 @@ document.querySelectorAll('.edit-booking-trigger').forEach(button => {
         if(bookingModal) bookingModal.style.display = 'flex';
     });
 });
+
+// Load bookings for a selected customer when their row is clicked
+document.querySelectorAll('.customer-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function() {
+        const cid = this.getAttribute('data-customer-id');
+        const container = document.getElementById('customerBookingsContainer');
+        if (!cid || !container) return;
+        container.innerHTML = '<div class="glass-panel" style="padding:20px;">Loading bookings...</div>';
+        fetch('customer_bookings.php?customer_id=' + encodeURIComponent(cid))
+            .then(r => r.text())
+            .then(html => { container.innerHTML = html; })
+            .catch(err => { container.innerHTML = '<div class="glass-panel" style="padding:20px;">Error loading bookings.</div>'; console.error(err); });
+    });
+});

@@ -30,6 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['user_id'] = $row['customer_ID'];
             $_SESSION['fullname'] = $row['full_name'];
             $_SESSION['role'] = 'user';
+            // If there's a pending booking in session, proceed to complete it
+            if (!empty($_SESSION['pending_booking'])) {
+                echo "<script>alert('Welcome back, " . addslashes($row['full_name']) . "! Redirecting to complete your booking.'); window.location.href='complete_booking.php';</script>";
+                exit();
+            }
             echo "<script>alert('Welcome back, " . addslashes($row['full_name']) . "!'); window.location.href='index.php';</script>";
             exit();
         }

@@ -160,6 +160,7 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                         <div class="stat-number"><?php echo count($attractions); ?></div>
                     </div>
                 </div>
+                <div id="customerBookingsContainer"></div>
             </section>
 
             <section id="bookings" class="admin-section">
@@ -224,7 +225,7 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                         </thead>
                         <tbody>
                             <?php foreach ($customers as $c): ?>
-                            <tr>
+                            <tr class="customer-row" data-customer-id="<?php echo htmlspecialchars($c['customer_ID']); ?>">
                                 <td><?php echo htmlspecialchars($c['customer_ID']); ?></td>
                                 <td><?php echo htmlspecialchars($c['full_name']); ?></td>
                                 <td><?php echo htmlspecialchars($c['email']); ?></td>

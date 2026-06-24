@@ -41,27 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Require login before completing booking: if user not logged in, save POST to session and redirect to login
         if (!empty($_SESSION['role']) && $_SESSION['role'] === 'user' && !empty($_SESSION['user_id'])) {
             $customerId = $_SESSION['user_id'];
         } else {
-            $stmt = $pdo->prepare('SELECT customer_ID FROM customer_info WHERE email = :email LIMIT 1');
-            $stmt->execute([':email' => $email]);
-            $customer = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($customer && !empty($customer['customer_ID'])) {
-                $customerId = $customer['customer_ID'];
-            } else {
-                $customerId = 'C' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
-                $randomPassword = bin2hex(random_bytes(6));
-                $passwordHash = password_hash($randomPassword, PASSWORD_DEFAULT);
-                $insertCustomer = $pdo->prepare('INSERT INTO customer_info (customer_ID, full_name, email, password_hash) VALUES (:id, :full_name, :email, :hash)');
-                $insertCustomer->execute([
-                    ':id' => $customerId,
-                    ':full_name' => $full_name,
-                    ':email' => $email,
-                    ':hash' => $passwordHash,
-                ]);
-            }
+            // Store the incoming booking in session for completion after authentication
+            $_SESSION['pending_booking'] = $_POST;
+            $_SESSION['pending_booking_time'] = time();
+            log_booking_debug('info', 'Booking saved to pending; redirecting to login', ['post' => $_POST]);
+            header('Location: login.php');
+            exit();
         }
 
         $bookingId = 'B' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
