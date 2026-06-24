@@ -218,52 +218,7 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
                 <div id="customerBookingsContainer"></div>
             </section>
 
-            <section id="bookings" class="admin-section">
-                <div class="section-header">
-                    <h2 class="glowing-text">Spell Bookings Scroll</h2>
-                </div>
-                <div class="table-container glass-panel">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Booking ID</th>
-                                <th>Traveler</th>
-                                <th>Email</th>
-                                <th>Visit Date</th>
-                                <th>Ticket</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($bookings as $b): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($b['booking_ID']); ?></td>
-                                <td><?php echo htmlspecialchars($b['customer_name'] ?? 'Unknown'); ?></td>
-                                <td><?php echo htmlspecialchars($b['customer_email'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($b['visit_date']); ?></td>
-                                <td><?php echo htmlspecialchars($b['ticket_type']); ?></td>
-                                <td>
-                                    <span class="status-badge <?php echo strtolower($b['booking_status']); ?>">
-                                        <?php echo htmlspecialchars($b['booking_status']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="action-btn edit-btn edit-booking-trigger" 
-                                            data-id="<?php echo $b['booking_ID']; ?>"
-                                            data-status="<?php echo htmlspecialchars($b['booking_status']); ?>">Modify</button>
-                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Banish this booking record?');">
-                                        <input type="hidden" name="action" value="delete_booking">
-                                        <input type="hidden" name="id" value="<?php echo $b['booking_ID']; ?>">
-                                        <button type="submit" class="action-btn banish-trigger" data-id="<?php echo $b['booking_ID']; ?>" style="background: rgba(244,67,54,0.2); color:#ff8a80;">Banish</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <!-- Spell Bookings section removed per request -->
 
             <section id="customers" class="admin-section">
                 <div class="section-header">
@@ -456,27 +411,14 @@ $bookings = $pdo->query("SELECT b.*, c.full_name AS customer_name, c.email AS cu
         </div>
     </div>
 
-    <div id="editBookingModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
-        <div class="glass-panel" style="padding:30px; width:400px; background: var(--eldar-purple-dark);">
-            <h3 class="glowing-text" style="margin-bottom:20px;">Modify Booking Scroll</h3>
-            <form method="POST">
-                <input type="hidden" name="action" value="update_booking">
-                <input type="hidden" name="booking_id" id="edit_booking_id">
-                <div style="margin-bottom:15px;">
-
-                <button type="submit" class="action-btn">Update Log</button>
-                <button type="button" onclick="closeModals()" class="action-btn" style="background:#555;">Cancel</button>
-            </form>
-        </div>
-    </div>
-
     <script src="admin.js?v=<?php echo time(); ?>"></script>
     <script>
-        const addBookingModal = document.getElementById('editBookingModal');
+        // Safe modal close utility (hides any modal that exists)
         function closeModals() {
-            document.getElementById('addModal').style.display = 'none';
-            document.getElementById('editModal').style.display = 'none';
-            document.getElementById('editBookingModal').style.display = 'none';
+            ['addModal','editModal','addCustomerModal','editCustomerModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
         }
     </script>
 </body>

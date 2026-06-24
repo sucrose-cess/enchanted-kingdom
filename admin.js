@@ -101,37 +101,15 @@ document.querySelectorAll('.banish-trigger').forEach(button => {
 function closeModals() {
     if(addModal) addModal.style.display = 'none';
     if(editModal) editModal.style.display = 'none';
-    const bookingModal = document.getElementById('editBookingModal');
-    if(bookingModal) bookingModal.style.display = 'none';
+    if(addCustomerModal) addCustomerModal.style.display = 'none';
+    if(editCustomerModal) editCustomerModal.style.display = 'none';
 }
 
 // Close modals when clicking outside the boxes
 window.addEventListener('click', (e) => {
-    const bookingModal = document.getElementById('editBookingModal');
-    if (e.target === addModal || e.target === editModal || e.target === bookingModal) {
+    if (e.target === addModal || e.target === editModal || e.target === addCustomerModal || e.target === editCustomerModal) {
         closeModals();
     }
-});
-
-// Bookings Triggers Setup
-const summonAddBookingModalBtn = document.getElementById('summonAddBookingModal');
-if(summonAddBookingModalBtn) {
-    summonAddBookingModalBtn.addEventListener('click', () => { 
-        const bookingModal = document.getElementById('editBookingModal');
-        if(bookingModal) bookingModal.style.display = 'flex'; 
-    });
-}
-
-document.querySelectorAll('.edit-booking-trigger').forEach(button => {
-    button.addEventListener('click', function() {
-        const bookingModal = document.getElementById('editBookingModal');
-        // Populate only booking ID and status (customer info is stored separately)
-        const editIdEl = document.getElementById('edit_booking_id');
-        const editStatusEl = document.getElementById('edit_booking_status');
-        if (editIdEl) editIdEl.value = this.getAttribute('data-id');
-        if (editStatusEl) editStatusEl.value = this.getAttribute('data-status');
-        if(bookingModal) bookingModal.style.display = 'flex';
-    });
 });
 
 // Load bookings for a selected customer when their row is clicked
