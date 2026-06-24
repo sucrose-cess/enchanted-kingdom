@@ -115,10 +115,11 @@ if(summonAddBookingModalBtn) {
 document.querySelectorAll('.edit-booking-trigger').forEach(button => {
     button.addEventListener('click', function() {
         const bookingModal = document.getElementById('editBookingModal');
-        document.getElementById('edit_booking_id').value = this.getAttribute('data-id');
-        document.getElementById('edit_booking_name').value = this.getAttribute('data-name');
-        document.getElementById('edit_booking_email').value = this.getAttribute('data-email');
-        document.getElementById('edit_booking_status').value = this.getAttribute('data-status');
+        // Populate only booking ID and status (customer info is stored separately)
+        const editIdEl = document.getElementById('edit_booking_id');
+        const editStatusEl = document.getElementById('edit_booking_status');
+        if (editIdEl) editIdEl.value = this.getAttribute('data-id');
+        if (editStatusEl) editStatusEl.value = this.getAttribute('data-status');
         if(bookingModal) bookingModal.style.display = 'flex';
     });
 });

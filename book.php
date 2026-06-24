@@ -3,8 +3,9 @@ session_start();
 require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $full_name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    // Accept either traveler_* or name/email fields from different form versions
+    $full_name = trim($_POST['traveler_name'] ?? $_POST['name'] ?? '');
+    $email = trim($_POST['traveler_email'] ?? $_POST['email'] ?? '');
     $ticket_type = trim($_POST['ticket_type'] ?? 'General Admission');
     $visit_date = trim($_POST['visit_date'] ?? date('Y-m-d'));
     $adult_count = intval($_POST['adult_count'] ?? 1);
