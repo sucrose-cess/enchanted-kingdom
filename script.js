@@ -9,10 +9,17 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// 2. Form Validation (Client-Side)
-const inquiryForm = document.getElementById('inquiryForm');
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('email');
+// 2. Form Validation (Client-Side) - FIXED IDS HERE
+const inquiryForm = document.getElementById('bookingForm'); // Fixed from 'inquiryForm'
+const nameInput = document.getElementById('traveler_name'); // Fixed from 'name'
+const emailInput = document.getElementById('traveler_email'); // Fixed from 'email'
+const ticketTypeEl = document.getElementById('ticket_type');
+const visitDateEl = document.getElementById('visit_date');
+const adultCountEl = document.getElementById('adult_count');
+const childrenCountEl = document.getElementById('children_count');
+const seniorCountEl = document.getElementById('senior_pwd_count');
+const totalAmountEl = document.getElementById('total_amount_php');
+const partyErrorEl = document.getElementById('party-error-msg');
 
 if (inquiryForm) {
     inquiryForm.addEventListener('submit', function(event) {
@@ -20,7 +27,7 @@ if (inquiryForm) {
         let isValid = true;
 
         // Validate Name
-        if (nameInput.value.trim() === '') {
+        if (!nameInput || nameInput.value.trim() === '') {
             showError(nameInput, 'Please provide the traveler\'s name.');
             isValid = false;
         } else {
@@ -28,7 +35,7 @@ if (inquiryForm) {
         }
 
         // Validate Email
-        if (emailInput.value.trim() === '') {
+        if (!emailInput || emailInput.value.trim() === '') {
             showError(emailInput, 'Please provide a celestial mail address.');
             isValid = false;
         } else if (!isValidEmail(emailInput.value)) {
@@ -39,7 +46,33 @@ if (inquiryForm) {
         }
 
         if (isValid) {
-            inquiryForm.submit(); 
+            // Compute total based on selected pass and party size
+            try {
+                const prices = {
+                    'Regular Day Pass': 1200,
+                    'Junior Pass': 800,
+                    'VIP Magic Pass': 2500
+                };
+                const ticket = ticketTypeEl ? ticketTypeEl.value : 'Regular Day Pass';
+                const price = prices[ticket] || 1200;
+                const adults = parseInt(adultCountEl?.value || 0, 10);
+                const children = parseInt(childrenCountEl?.value || 0, 10);
+                const seniors = parseInt(seniorCountEl?.value || 0, 10);
+                const partyTotal = adults + children + seniors;
+                if (partyTotal <= 0) {
+                    if (partyErrorEl) partyErrorEl.innerText = 'Please select at least one guest.';
+                    isValid = false;
+                } else {
+                    if (partyErrorEl) partyErrorEl.innerText = '';
+                }
+
+                const total = partyTotal * price;
+                if (totalAmountEl) totalAmountEl.value = total;
+            } catch (e) {
+                console.warn('Error computing total:', e);
+            }
+
+            if (isValid) inquiryForm.submit();
         }
     });
 }
@@ -69,7 +102,6 @@ document.addEventListener('click', function(e) {
     const sparkle = document.createElement('div');
     sparkle.innerHTML = '✨';
     sparkle.style.position = 'absolute';
-    // Use pageX and pageY to account for scrolling
     sparkle.style.left = `${e.pageX - 10}px`;
     sparkle.style.top = `${e.pageY - 10}px`;
     sparkle.style.color = '#ffd54f';
@@ -78,31 +110,25 @@ document.addEventListener('click', function(e) {
     sparkle.style.zIndex = '9999';
     document.body.appendChild(sparkle);
     
-    // Remove the sparkle after 1 second so they don't pile up
     setTimeout(() => {
         sparkle.remove();
     }, 1000);
 });
 
-// 4. Magic Mouse Glitter Trail (NEW!)
+// 4. Magic Mouse Glitter Trail
 document.addEventListener('mousemove', function(e) {
-    // 1. Create a new div element for the sparkle
     const glitter = document.createElement('div');
     glitter.classList.add('magic-glitter');
     
-    // 2. Position it exactly where the mouse pointer is (clientX/Y works perfectly with position: fixed in CSS)
     glitter.style.left = e.clientX + 'px';
     glitter.style.top = e.clientY + 'px';
     
-    // 3. Give it a slightly random size (between 4px and 10px) so it looks natural
     const size = Math.random() * 6 + 4; 
     glitter.style.width = size + 'px';
     glitter.style.height = size + 'px';
 
-    // 4. Add the sparkle to the web page
     document.body.appendChild(glitter);
     
-    // 5. Remove the sparkle after 800 milliseconds (when the CSS animation finishes)
     setTimeout(() => {
         glitter.remove();
     }, 800);

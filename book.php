@@ -2,6 +2,25 @@
 session_start();
 require_once 'db.php';
 
+// Ensure logs directory exists for debugging booking submissions
+$logDir = __DIR__ . '/logs';
+if (!is_dir($logDir)) {
+    @mkdir($logDir, 0755, true);
+}
+
+function log_booking_debug($level, $message, $data = []) {
+    global $logDir;
+    $entry = [
+        'time' => date('c'),
+        'level' => $level,
+        'message' => $message,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'uri' => $_SERVER['REQUEST_URI'] ?? '',
+        'post' => $data,
+    ];
+    @file_put_contents($logDir . '/book_debug.log', json_encode($entry) . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Accept either traveler_* or name/email fields from different form versions
     $full_name = trim($_POST['traveler_name'] ?? $_POST['name'] ?? '');
@@ -16,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_amount_php = floatval($_POST['total_amount_php'] ?? 0);
 
     if (empty($full_name) || empty($email)) {
+        // Log missing fields for debugging before returning the message
+        log_booking_debug('warning', 'Missing required booking fields', ['traveler_name' => $full_name, 'traveler_email' => $email, 'raw_post' => $_POST]);
         die('Please provide both your full name and email to book tickets.');
     }
 
@@ -98,7 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </script>";
         exit();
     } catch (PDOException $e) {
-        die('Database Error: ' . $e->getMessage());
+        // Log DB exception with POST snapshot for debugging
+        log_booking_debug('error', 'Database error inserting booking', ['error' => $e->getMessage(), 'post' => $_POST]);
+        die('Database Error. Please try again later.');
     }
 }
 
