@@ -18,46 +18,76 @@ function log_booking_debug($level, $message, $data = []) {
         'uri' => $_SERVER['REQUEST_URI'] ?? '',
         'post' => $data,
     ];
-    @file_put_contents($logDir . '/book_debug.log', json_encode($entry) . PHP_EOL, FILE_APPEND | LOCK_EX);
+    @file_put_contents(
+        $logDir . '/book_debug.log',
+        json_encode($entry) . PHP_EOL,
+        FILE_APPEND | LOCK_EX
+    );
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     // Accept either traveler_* or name/email fields from different form versions
     $full_name = trim($_POST['traveler_name'] ?? $_POST['name'] ?? '');
     $email = trim($_POST['traveler_email'] ?? $_POST['email'] ?? '');
+
     $ticket_type = trim($_POST['ticket_type'] ?? 'General Admission');
     $visit_date = trim($_POST['visit_date'] ?? date('Y-m-d'));
+
     $adult_count = intval($_POST['adult_count'] ?? 1);
     $children_count = intval($_POST['children_count'] ?? 0);
     $senior_pwd_count = intval($_POST['senior_pwd_count'] ?? 0);
+
     $optional_services = trim($_POST['optional_services'] ?? 'None');
     $special_request = trim($_POST['special_request'] ?? 'None');
+
     $total_amount_php = floatval($_POST['total_amount_php'] ?? 0);
 
     if (empty($full_name) || empty($email)) {
-        // Log missing fields for debugging before returning the message
-        log_booking_debug('warning', 'Missing required booking fields', ['traveler_name' => $full_name, 'traveler_email' => $email, 'raw_post' => $_POST]);
+
+        log_booking_debug(
+            'warning',
+            'Missing required booking fields',
+            [
+                'traveler_name' => $full_name,
+                'traveler_email' => $email,
+                'raw_post' => $_POST
+            ]
+        );
+
         die('Please provide both your full name and email to book tickets.');
     }
 
     try {
-        // Require login before completing booking: if user not logged in, save POST to session and redirect to login
-        if (!empty($_SESSION['role']) && $_SESSION['role'] === 'user' && !empty($_SESSION['user_id'])) {
+
+        // Require login before completing booking
+        if (
+            !empty($_SESSION['role']) &&
+            $_SESSION['role'] === 'user' &&
+            !empty($_SESSION['user_id'])
+        ) {
+
             $customerId = $_SESSION['user_id'];
+
         } else {
-            // Store the incoming booking in session for completion after authentication
+
             $_SESSION['pending_booking'] = $_POST;
             $_SESSION['pending_booking_time'] = time();
-            log_booking_debug('info', 'Booking saved to pending; redirecting to login', ['post' => $_POST]);
+
+            log_booking_debug(
+                'info',
+                'Booking saved to pending; redirecting to login',
+                ['post' => $_POST]
+            );
+
             header('Location: login.php');
             exit();
         }
 
-        $bookingId = 'B' . str_pad(mt_rand(10000, 99999), 5, '0', STR_PAD_LEFT);
-        $referenceNumber = 'EK' . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+        $referenceNumber =
+            'EK' . strtoupper(substr(md5(uniqid('', true)), 0, 8));
 
         $sql = 'INSERT INTO booking_details (
-                    booking_ID,
                     customer_ID,
                     ticket_type,
                     visit_date,
@@ -71,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     booking_status,
                     booking_date
                 ) VALUES (
-                    :booking_id,
                     :customer_id,
                     :ticket_type,
                     :visit_date,
@@ -87,8 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )';
 
         $stmt = $pdo->prepare($sql);
+
         $stmt->execute([
-            ':booking_id' => $bookingId,
             ':customer_id' => $customerId,
             ':ticket_type' => $ticket_type,
             ':visit_date' => $visit_date,
@@ -107,9 +136,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 window.location.href = 'index.php';
               </script>";
         exit();
+
     } catch (PDOException $e) {
-        // Log DB exception with POST snapshot for debugging
-        log_booking_debug('error', 'Database error inserting booking', ['error' => $e->getMessage(), 'post' => $_POST]);
+
+        log_booking_debug(
+            'error',
+            'Database error inserting booking',
+            [
+                'error' => $e->getMessage(),
+                'post' => $_POST
+            ]
+        );
+
         die('Database Error. Please try again later.');
     }
 }

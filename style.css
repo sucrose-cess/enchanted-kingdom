@@ -614,3 +614,26 @@ footer {
     background-color: #d32f2f;
     box-shadow: 0 0 10px rgba(239, 83, 80, 0.5);
 }
+
+.glow-login-btn {
+    display: inline-block;
+    padding: 16px 42px;
+    border-radius: 999px;
+    background: rgba(255, 213, 79, 0.08);
+    border: 2px solid var(--eldar-gold);
+    color: var(--eldar-gold);
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(255, 213, 79, 0.3);
+    text-transform: uppercase;
+}
+
+.glow-login-btn:hover {
+    background: var(--eldar-gold);
+    color: var(--eldar-purple-dark);
+    box-shadow: 0 0 25px rgba(255, 213, 79, 0.9);
+    transform: scale(1.05);
+}
